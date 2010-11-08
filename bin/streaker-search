@@ -2,12 +2,16 @@
 
 $:.unshift File.join(File.dirname(__FILE__), "..", "lib")
 require "streaker"
+require "rubygems"
+require "trollop"
 
-unless ARGV.size >= 2
-  puts "Usage: streaker-search <where> <what>"
-  exit 1
+options = Trollop.options do
+  banner "Usage: streaker search [options] query"
+  opt :in, "Search here (may be specified multiple times)",
+      :type => :string, :multi => true, :required => true
+  stop_on_unknown
 end
+Trollop.die "a query must be specified" unless query = ARGV.pop
 
-where, what = *ARGV
-search = Streaker::Search.new(what, :in => where)
+search = Streaker::Search.new(query, options)
 search.results.each { |p| puts p }

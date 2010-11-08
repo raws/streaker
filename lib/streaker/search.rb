@@ -6,19 +6,21 @@ module Streaker
     
     def initialize(query, options={})
       @query = query
-      @options = { :in => "/" }.merge(options)
+      @options = { :in => ["/"] }.merge(options)
     end
     
     def results
-      @results ||= `#{command}`.strip.split("\n")
+      @results ||= options[:in].inject([]) do |results, where|
+        results += `#{command(where.sub(%r{/$}, ""))}`.strip.split("\n")
+      end
     end
     
-    def command
-      "#{find} #{options[:in]} #{query} -not -type d -and #{types}"
+    def command(where)
+      "#{find} #{where} #{query} -not -type d -and #{types}"
     end
     
     def find
-      `which find`.strip
+      @find ||= `which find`.strip
     end
     
     def query
