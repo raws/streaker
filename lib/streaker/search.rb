@@ -10,13 +10,11 @@ module Streaker
     end
     
     def results
-      @results ||= options[:in].inject([]) do |results, where|
-        results += `#{command(where.sub(%r{/$}, ""))}`.strip.split("\n")
-      end
+      @results ||= `#{command}`.strip.split("\n")
     end
     
-    def command(where)
-      "#{find} #{where} #{query} -not -type d -and #{types}"
+    def command
+      "#{find} #{options[:in].join(" ")} #{query} -not -type d -and #{types}"
     end
     
     def find
