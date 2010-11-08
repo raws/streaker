@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+require "streaker"
+
+unless ARGV.size >= 2
+  puts "Usage: streaker-search <where> <what>"
+  exit 1
+end
+
+where, what = *ARGV
+search = Streaker::Search.new(what, :in => where)
+search.results.each { |p| puts p }

@@ -1,0 +1,1 @@
+require "streaker/search"
