@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+commands = Dir[File.join(File.dirname(__FILE__), "streaker-*")].map do |name|
+  name[/-(.*)$/, 1]
+end.sort
+command = ARGV.first
+command = command.downcase.strip if command
+
+if commands.include?(command)
+  exec(File.join(File.dirname(__FILE__), "streaker-#{command}"), *ARGV[1..-1])
+else
+  $stderr.puts "Usage: streaker <#{commands.join(" | ")}> ..."
+  exit 1
+end
