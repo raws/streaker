@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.join(File.dirname(__FILE__), "..", "lib")
+require "streaker"
+require "rubygems"
+require "trollop"
+
+options = Trollop.options do
+  banner "Usage: streaker stream [options] --file path"
+  banner "       streaker stream [options] --search query --in path"
+  opt :file, "Stream this file", :type => :string
+  opt :search, "Search for these terms", :type => :string
+  opt :in, "Search here (may be specified multiple times)",
+      :type => :string, :multi => true
+  depends :search, :in
+  conflicts :file, :search
+  opt :scale, "Scale video to this ratio", :type => :float
+  opt :width, "Scale video to this width, respecting aspect ratio", :type => :integer
+  conflicts :scale, :width
+  opt :vbr, "Video bit rate in kbps", :default => 512
+  opt :abr, "Audio bit rate in kbps", :default => 96
+  opt :bind, "Bind VLC to this IP and port", :type => :string
+  opt :interface, "Use this VLC interface", :default => "dummy"
+  opt :daemon, "Daemonize VLC", :type => :boolean
+  opt :pid, "Write PID file here", :type => :string
+  opt :vlc, "Path to VLC binary", :type => :string
+  stop_on_unknown
+end
+Trollop.die "either --file or --search must be specified" unless options[:file] || options[:search]
+Trollop.die "--pid requires --daemon" if options[:pid] && !options[:daemon]
+
+file = if options[:file]
+         options[:file]
+       elsif query = options[:search]
+         search = Streaker::Search.new(query, options)
+         if !search.results.empty?
+           search.results.first
+         else
+           Trollop.die %{no streamable files matching "#{query}" were found}
+         end
+       else
+         Trollop.die "either --file or --search must be specified"
+       end
+vlc = Streaker::Vlc.new(file, options)
+exec vlc.command
