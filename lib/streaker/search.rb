@@ -7,6 +7,7 @@ module Streaker
     def initialize(query, options={})
       @query = query
       @options = { :in => ["/"] }.merge(options)
+      @options[:in] = [@options[:in]] unless @options[:in].is_a?(Array)
     end
     
     def results
@@ -14,7 +15,8 @@ module Streaker
     end
     
     def command
-      "#{find} #{options[:in].join(" ")} #{query} -not -type d -and #{types}"
+      where = options[:in].map { |p| p.shellescape }.join(" ")
+      "#{find} #{where} #{query} -not -type d -and #{types}"
     end
     
     def find

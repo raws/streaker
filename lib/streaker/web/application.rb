@@ -15,9 +15,8 @@ module Streaker
       
       helpers do
         def search(query)
-          options = { :in => ["/Volumes/Liberator/Media/Movies",
-            "/Volumes/Liberator/Media/TV\\ Shows"] }
-          Streaker::Search.new(query, options).results
+          where = ["/Volumes/Liberator/Media/Movies", "/Volumes/Liberator/Media/TV Shows"]
+          Streaker::Search.new(query, :in => where).results
         end
         
         def stream(file)
