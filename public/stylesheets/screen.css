@@ -13,3 +13,15 @@ input[type=submit] {
 	position: relative;
 	bottom: 2px;
 }
+
+code { font-size: 1.2em; }
+
+p.status.playing {
+	padding: 10px;
+	color: #4c8316;
+	background-color: #d9edc1;
+	border: 1px solid #9fd165;
+	border-radius: 10px;
+}
+
+p.status.playing span.title { font-weight: bold; }

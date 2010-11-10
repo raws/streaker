@@ -9,7 +9,10 @@
 	<h1>Streaker</h1>
 	
 	<% if playing = Streaker::Web::Process.playing %>
-  	<p class="status playing">Currently streaming <span class="title"><%= File.basename(playing) %></span>.</p>
+  	<p class="status playing">
+  	  Currently streaming <span class="title"><%= File.basename(playing) %></span>.
+  	  Connect your media player to <code>http://<%= request.host %>:3555/</code> to watch.
+  	</p>
   <% end %>
   
 	<%= yield %>
