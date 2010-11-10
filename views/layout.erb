@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Streaker</title>
+</head>
+<body>
+	<h1>Streaker</h1>
+	
+	<% if playing = Streaker::Web::Process.playing %>
+  	<p class="status playing">Currently streaming <span class="title"><%= File.basename(playing) %></span>.</p>
+  <% end %>
+  
+	<%= yield %>
+</body>
+</html>

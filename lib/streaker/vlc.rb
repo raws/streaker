@@ -10,6 +10,9 @@ module Streaker
     def command
       command = vlc
       command << " -I #{options[:interface] || "dummy"}"
+      if options[:interface] == "rc" && socket = options[:socket]
+        command << " --rc-#{socket =~ /:\d+$/ ? "host" : "unix"}=#{socket}"
+      end
       command << " --daemon" if options[:daemon] || options[:interface] == "dummy"
       command << " --pidfile #{options[:pid]}" if options[:pid] && options[:daemon]
       command << " #{file.shellescape} vlc://quit"

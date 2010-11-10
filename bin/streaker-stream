@@ -21,13 +21,16 @@ options = Trollop.options do
   opt :abr, "Audio bit rate in kbps", :default => 96
   opt :bind, "Bind VLC to this IP and port", :type => :string
   opt :interface, "Use this VLC interface", :default => "dummy"
+  opt :socket, "Expose VLC via this socket", :type => :string
   opt :daemon, "Daemonize VLC", :type => :boolean
   opt :pid, "Write PID file here", :type => :string
   opt :vlc, "Path to VLC binary", :type => :string
+  opt :"dry-run", "Print the resultant command and exit", :type => :boolean, :short => "n"
   stop_on_unknown
 end
 Trollop.die "either --file or --search must be specified" unless options[:file] || options[:search]
 Trollop.die "--pid requires --daemon" if options[:pid] && !options[:daemon]
+Trollop.die "--socket requires the rc interface" if options[:socket] && options[:interface] != "rc"
 
 file = if options[:file]
          options[:file]
@@ -42,4 +45,9 @@ file = if options[:file]
          Trollop.die "either --file or --search must be specified"
        end
 vlc = Streaker::Vlc.new(file, options)
-exec vlc.command
+
+if options[:"dry-run"]
+  puts vlc.command
+else
+  exec vlc.command
+end

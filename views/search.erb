@@ -1,0 +1,28 @@
+<script type="text/javascript" charset="utf-8">
+	var playing = <%= Streaker::Web::Process.playing ? "true" : "false" %>;
+	function stream(file) {
+		if (playing) {
+			if (!confirm("Are you sure you wish to interrupt the current stream? " +
+									 "Doing so may anger any viewers.")) {
+				return false;
+			}
+		}
+		
+		document.getElementById("stream-file").value = file;
+		document.getElementById("stream-form").submit();
+		return false;
+	}
+</script>
+
+<div style="display:none;">
+	<form id="stream-form" action="stream" method="post" accept-charset="utf-8">
+		<input id="stream-file" type="hidden" name="file" value="">
+	</form>
+</div>
+
+<h2>Search for &ldquo;<%= @query %>&rdquo;</h2>
+<ol>
+	<% @results.each do |result| %>
+	<li><a href="javascript:{}" onclick="stream('<%= result %>');"><%= File.basename(result) %></a></li>
+	<% end %>
+</ol>
