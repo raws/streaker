@@ -20,7 +20,7 @@ module Streaker
         end
         
         def stream(file)
-          Streaker::Web::Process.playing! file
+          Streaker::Web::Process.play! file
         end
         
         def error(message=nil)

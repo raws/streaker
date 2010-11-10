@@ -33,7 +33,7 @@ module Streaker
           YAML.load_file(playing_path) if alive? && File.exist?(playing_path)
         rescue; end
         
-        def playing!(path=nil)
+        def play!(path=nil)
           if path
             ::Process.kill(:TERM, pid.to_i) if alive?
             sleep 0.1
