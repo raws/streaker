@@ -1,11 +1,17 @@
 require "erb"
+require "pathname"
 require "rubygems"
 require "sinatra/base"
 
 module Streaker
   module Web
     class Application < Sinatra::Base
-      set :root, File.join(File.dirname(__FILE__), "..", "..", "..")
+      def self.root
+        Pathname.new File.join(File.dirname(__FILE__), "..", "..", "..")
+      end
+      
+      set :root, root
+      set :public, root.join("public")
       
       helpers do
         def search(query)
@@ -29,14 +35,16 @@ module Streaker
       end
       
       get "/search" do
-        error "please specify a search query" unless @query = params[:q]
+        @query = params[:q]
+        return error "please specify a search query" if @query.blank?
         @results = search(@query)
         erb :search
       end
       
       post "/stream" do
         @file = params[:file]
-        erb :error if @file.nil? || !File.exist?(@file)
+        return error "please specify a file to stream" if @file.nil?
+        return error "that file doesn't exist somehow" unless File.exist?(@file)
         stream(@file)
         redirect "/"
       end

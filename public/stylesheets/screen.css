@@ -1,0 +1,15 @@
+body {
+	width: 800px;
+	margin: 0 auto;
+	font: normal normal normal 1em/1.5em "Lucida Grande", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+input[type=text] {
+	width: 50%;
+	font-size: 1em;
+}
+
+input[type=submit] {
+	position: relative;
+	bottom: 2px;
+}
