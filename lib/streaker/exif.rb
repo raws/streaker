@@ -20,13 +20,17 @@ module Streaker
     end
     
     def command
-      command = "#{exiftool} -j"
+      command = "#{exiftool} -json"
       command << " #{@requested.join(" ")}" unless @requested.empty?
       command << " #{file.shellescape}"
     end
     
     def exiftool
-      @exiftool ||= `which exiftool`.strip
+      self.class.exiftool || `which exiftool`.strip
+    end
+    
+    class << self
+      attr_accessor :exiftool
     end
   end
 end
