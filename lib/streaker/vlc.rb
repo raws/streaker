@@ -20,7 +20,9 @@ module Streaker
     end
     
     def vlc
-      @vlc ||= if options[:vlc]
+      @vlc ||= if self.class.vlc
+        self.class.vlc
+      elsif options[:vlc]
         options[:vlc]
       elsif OS.posix? && !(vlc = `which vlc`).blank?
         vlc.strip
@@ -53,6 +55,10 @@ module Streaker
       options = { :access => "http", :mux => "ts",
         :dst => @options[:bind] || "0.0.0.0:3555" }
       module_for :standard, options
+    end
+    
+    class << self
+      attr_accessor :vlc
     end
   end
 end
